@@ -15,7 +15,6 @@
     font-family: 'Rajdhani', sans-serif;
   }
 
-  /* Radial glow behind where L will stand */
   .glow {
     position: absolute;
     width: 340px;
@@ -28,7 +27,6 @@
     pointer-events: none;
   }
 
-  /* Horizontal scan lines */
   .scanlines {
     position: absolute;
     inset: 0;
@@ -43,7 +41,6 @@
     pointer-events: none;
   }
 
-  /* Diagonal slash light */
   .slash {
     position: absolute;
     width: 2px;
@@ -56,7 +53,6 @@
     pointer-events: none;
   }
 
-  /* Top line */
   .top-line {
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -65,7 +61,6 @@
     z-index: 20;
   }
 
-  /* Bottom line */
   .bottom-line {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -74,19 +69,17 @@
     z-index: 20;
   }
 
-  /* Corner brackets */
   .c { position: absolute; width: 18px; height: 18px; z-index: 20; }
   .c-tl { top: 14px; left: 14px; border-top: 1px solid rgba(255,255,255,0.4); border-left: 1px solid rgba(255,255,255,0.4); }
   .c-tr { top: 14px; right: 14px; border-top: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.4); }
   .c-bl { bottom: 14px; left: 14px; border-bottom: 1px solid rgba(255,255,255,0.4); border-left: 1px solid rgba(255,255,255,0.4); }
   .c-br { bottom: 14px; right: 14px; border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.4); }
 
-  /* LEFT SIDE — text content */
   .left {
     position: absolute;
     left: 36px;
     top: 0; bottom: 0;
-    width: 310px;
+    width: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -126,7 +119,6 @@
     margin-bottom: 28px;
   }
 
-  /* Divider */
   .divider {
     width: 48px;
     height: 1px;
@@ -134,7 +126,6 @@
     margin-bottom: 22px;
   }
 
-  /* Pills */
   .pills {
     display: flex;
     flex-wrap: wrap;
@@ -153,7 +144,6 @@
     background: rgba(255,255,255,0.02);
   }
 
-  /* Price */
   .price-wrap {
     display: inline-flex;
     align-items: baseline;
@@ -179,7 +169,7 @@
     line-height: 1;
   }
 
-  /* CENTER — L image placeholder */
+  /* ── L ZONE ── put l.png here */
   .l-zone {
     position: absolute;
     left: 50%;
@@ -193,33 +183,39 @@
     justify-content: center;
   }
 
+  /* PLACEHOLDER — delete this div once you add l.png */
   .l-placeholder {
     width: 100%;
     height: 100%;
-    border-left: 1px dashed rgba(255,255,255,0.06);
-    border-right: 1px dashed rgba(255,255,255,0.06);
+    border-left: 1px dashed rgba(255,255,255,0.08);
+    border-right: 1px dashed rgba(255,255,255,0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
   }
 
-  .l-placeholder-text {
+  .l-placeholder p {
     font-size: 9px;
     letter-spacing: 3px;
-    color: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.12);
     text-transform: uppercase;
     font-weight: 600;
     text-align: center;
+    line-height: 1.8;
   }
 
-  .l-placeholder-icon {
-    font-size: 28px;
-    color: rgba(255,255,255,0.06);
-  }
+  /* ── TO ADD L.PNG ──
+     Replace the .l-placeholder div with:
 
-  /* Ground shadow under L */
+     <img src="l.png"
+          style="width:100%; height:100%;
+                 object-fit:contain;
+                 object-position:bottom;
+                 filter:grayscale(100%) contrast(1.2);">
+  */
+
   .ground-shadow {
     position: absolute;
     bottom: 0;
@@ -227,11 +223,10 @@
     transform: translateX(-50%);
     width: 180px;
     height: 20px;
-    background: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, transparent 70%);
     z-index: 8;
   }
 
-  /* RIGHT SIDE — mock UI */
   .right {
     position: absolute;
     right: 30px;
@@ -307,7 +302,6 @@
     font-weight: 700;
   }
 
-  /* Stats row */
   .stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -336,7 +330,6 @@
     font-weight: 600;
   }
 
-  /* Bottom strip */
   .bottom-strip {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -364,7 +357,6 @@
     border-radius: 50%;
   }
 
-  /* AugX badge */
   .augx-badge {
     position: absolute;
     top: 18px;
@@ -418,11 +410,10 @@
     </div>
   </div>
 
-  <!-- L ZONE — place your l.png here -->
+  <!-- L ZONE — replace placeholder with your l.png -->
   <div class="l-zone">
     <div class="l-placeholder">
-      <div class="l-placeholder-icon">↑</div>
-      <div class="l-placeholder-text">Place<br>l.png<br>here</div>
+      <p>↑<br>Place<br>l.png<br>here<br>↑</p>
     </div>
   </div>
   <div class="ground-shadow"></div>
