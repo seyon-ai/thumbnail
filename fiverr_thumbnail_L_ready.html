@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+  .thumb {
+    width: 680px;
+    height: 460px;
+    background: #050505;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  /* Radial glow behind where L will stand */
+  .glow {
+    position: absolute;
+    width: 340px;
+    height: 500px;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.045) 0%, transparent 70%);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -55%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Horizontal scan lines */
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.008) 3px,
+      rgba(255,255,255,0.008) 4px
+    );
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Diagonal slash light */
+  .slash {
+    position: absolute;
+    width: 2px;
+    height: 700px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.07), transparent);
+    top: -100px;
+    left: 55%;
+    transform: rotate(-20deg);
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  /* Top line */
+  .top-line {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0.6) 60%, transparent 100%);
+    z-index: 20;
+  }
+
+  /* Bottom line */
+  .bottom-line {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    z-index: 20;
+  }
+
+  /* Corner brackets */
+  .c { position: absolute; width: 18px; height: 18px; z-index: 20; }
+  .c-tl { top: 14px; left: 14px; border-top: 1px solid rgba(255,255,255,0.4); border-left: 1px solid rgba(255,255,255,0.4); }
+  .c-tr { top: 14px; right: 14px; border-top: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.4); }
+  .c-bl { bottom: 14px; left: 14px; border-bottom: 1px solid rgba(255,255,255,0.4); border-left: 1px solid rgba(255,255,255,0.4); }
+  .c-br { bottom: 14px; right: 14px; border-bottom: 1px solid rgba(255,255,255,0.4); border-right: 1px solid rgba(255,255,255,0.4); }
+
+  /* LEFT SIDE — text content */
+  .left {
+    position: absolute;
+    left: 36px;
+    top: 0; bottom: 0;
+    width: 310px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  .eyebrow {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 0.95;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+  }
+
+  .headline .outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255,255,255,0.55);
+  }
+
+  .sub {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  /* Divider */
+  .divider {
+    width: 48px;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+    margin-bottom: 22px;
+  }
+
+  /* Pills */
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 28px;
+  }
+
+  .pill {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* Price */
+  .price-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 8px 18px 8px 14px;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .price-from {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  .price-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+  }
+
+  /* CENTER — L image placeholder */
+  .l-zone {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    width: 240px;
+    height: 420px;
+    z-index: 9;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .l-placeholder {
+    width: 100%;
+    height: 100%;
+    border-left: 1px dashed rgba(255,255,255,0.06);
+    border-right: 1px dashed rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .l-placeholder-text {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.1);
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .l-placeholder-icon {
+    font-size: 28px;
+    color: rgba(255,255,255,0.06);
+  }
+
+  /* Ground shadow under L */
+  .ground-shadow {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 20px;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, transparent 70%);
+    z-index: 8;
+  }
+
+  /* RIGHT SIDE — mock UI */
+  .right {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 148px;
+    z-index: 10;
+  }
+
+  .mock-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 6px;
+    padding: 10px;
+  }
+
+  .mock-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .mock-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+
+  .mock-title {
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .product-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .product-row:last-child { border-bottom: none; }
+
+  .prod-img {
+    width: 28px; height: 28px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.15);
+  }
+
+  .prod-info { flex: 1; }
+
+  .prod-name {
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .prod-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* Stats row */
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: 6px;
+  }
+
+  .stat-box {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 7px 8px;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .stat-label {
+    font-size: 6px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Bottom strip */
+  .bottom-strip {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 32px;
+    background: rgba(255,255,255,0.015);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 15;
+  }
+
+  .strip-item {
+    font-size: 7px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.18);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .strip-sep {
+    width: 2px; height: 2px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+
+  /* AugX badge */
+  .augx-badge {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 7px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 3px 8px;
+    z-index: 20;
+  }
+</style>
+</head>
+<body>
+<div class="thumb">
+  <div class="top-line"></div>
+  <div class="bottom-line"></div>
+  <div class="glow"></div>
+  <div class="scanlines"></div>
+  <div class="slash"></div>
+
+  <div class="c c-tl"></div>
+  <div class="c c-tr"></div>
+  <div class="c c-bl"></div>
+  <div class="c c-br"></div>
+
+  <div class="augx-badge">AugX Dev</div>
+
+  <!-- LEFT TEXT -->
+  <div class="left">
+    <div class="eyebrow">Premium Web Development</div>
+    <div class="headline">
+      E-COM<br>
+      <span class="outline">MERCE</span><br>
+      BUILT.
+    </div>
+    <div class="sub">Custom · Fast · Powerful</div>
+    <div class="divider"></div>
+    <div class="pills">
+      <div class="pill">Firebase</div>
+      <div class="pill">AI Powered</div>
+      <div class="pill">Full Stack</div>
+      <div class="pill">Mobile Ready</div>
+      <div class="pill">No Templates</div>
+    </div>
+    <div class="price-wrap">
+      <span class="price-from">From</span>
+      <span class="price-num">$80</span>
+    </div>
+  </div>
+
+  <!-- L ZONE — place your l.png here -->
+  <div class="l-zone">
+    <div class="l-placeholder">
+      <div class="l-placeholder-icon">↑</div>
+      <div class="l-placeholder-text">Place<br>l.png<br>here</div>
+    </div>
+  </div>
+  <div class="ground-shadow"></div>
+
+  <!-- RIGHT MOCK UI -->
+  <div class="right">
+    <div class="mock-card">
+      <div class="mock-header">
+        <div class="mock-dot"></div>
+        <div class="mock-dot"></div>
+        <span class="mock-title">Store</span>
+      </div>
+      <div class="product-row">
+        <div class="prod-img">◈</div>
+        <div class="prod-info">
+          <div class="prod-name">Watch</div>
+          <div class="prod-price">$299</div>
+        </div>
+      </div>
+      <div class="product-row">
+        <div class="prod-img">◉</div>
+        <div class="prod-info">
+          <div class="prod-name">Bag</div>
+          <div class="prod-price">$189</div>
+        </div>
+      </div>
+      <div class="product-row">
+        <div class="prod-img">◇</div>
+        <div class="prod-info">
+          <div class="prod-name">Ring</div>
+          <div class="prod-price">$459</div>
+        </div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Rated</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3d</div>
+        <div class="stat-label">Delivery</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Custom</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">AI</div>
+        <div class="stat-label">Powered</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM STRIP -->
+  <div class="bottom-strip">
+    <span class="strip-item">Real Code</span>
+    <div class="strip-sep"></div>
+    <span class="strip-item">No Builders</span>
+    <div class="strip-sep"></div>
+    <span class="strip-item">Firebase Backend</span>
+    <div class="strip-sep"></div>
+    <span class="strip-item">Deployed & Live</span>
+  </div>
+</div>
+</body>
+</html>
